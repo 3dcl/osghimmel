@@ -48,7 +48,9 @@ set_target_properties(demo_computed
 	PROPERTIES
 	DEBUG_POSTFIX "d${DEBUG_POSTFIX}")	
 	
-install(TARGETS demo_computed
-    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+if(MSVC)
+    install(TARGETS demo_computed
+        DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+endif()
 
 add_definitions("-D_CRT_SECURE_NO_WARNINGS")

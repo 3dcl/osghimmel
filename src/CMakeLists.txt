@@ -74,7 +74,9 @@ set(LIB_SOURCES
     sun.cpp
     sun2.cpp
     timef.cpp
-    twounitschanger.cpp
+    twounitschanger.cpp)
+
+set(LIB_HEADERS
 
     ${HEADER_PATH}/abstracthimmel.h
     ${HEADER_PATH}/abstractmappedhimmel.h
@@ -122,7 +124,8 @@ set(LIB_SOURCES
     ${HEADER_PATH}/sun.h
     ${HEADER_PATH}/sun2.h
     ${HEADER_PATH}/timef.h
-    ${HEADER_PATH}/twounitschanger.h)
+    ${HEADER_PATH}/twounitschanger.h
+    ${HEADER_PATH}/typedefs.h)
 
 set(SHADER_FRAGMENTS
 
@@ -162,10 +165,10 @@ set(SHADER_FRAGMENTS
 	shaderfragment/scattering.h
     shaderfragment/scattering.cpp)
 
-source_group("" FILES ${LIB_SOURCES})    
+source_group("" FILES ${LIB_SOURCES} ${LIB_HEADERS})    
 source_group("Shader Fragments" FILES ${SHADER_FRAGMENTS})
 
-add_library(osgHimmel SHARED ${LIB_SOURCES} ${SHADER_FRAGMENTS})
+add_library(osgHimmel SHARED ${LIB_SOURCES} ${LIB_HEADERS} ${SHADER_FRAGMENTS})
 
 include_directories(
     ${HEADER_PATH})
@@ -176,7 +179,6 @@ target_link_libraries(osgHimmel
     ${OPENGL_glu_LIBRARY})
 
 if(MSVC)
-
 	set_target_properties(osgHimmel
 		PROPERTIES
 		COMPILE_FLAGS "/W4 /fp:fast /Ot /MP /GS-"
@@ -185,11 +187,14 @@ if(MSVC)
 		DEBUG_POSTFIX "d${DEBUG_POSTFIX}")
 
 	add_definitions("-DOSGHIMMEL_EXPORTS")
-
 else(MSVC)
 	set_target_properties(osgHimmel
 		PROPERTIES
-		DEBUG_POSTFIX "d${DEBUG_POSTFIX}")
+		DEBUG_POSTFIX "d${DEBUG_POSTFIX}"
+		PUBLIC_HEADER "${LIB_HEADERS}" )
+	install(TARGETS osgHimmel
+		LIBRARY DESTINATION lib${LIB_POSTFIX}
+		PUBLIC_HEADER DESTINATION include/osgHimmel)
 endif()
  
 if(OPTION_MAKE_SKYBOX)

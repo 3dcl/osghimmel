@@ -184,22 +184,24 @@ target_link_libraries(skybox
 set_target_properties(skybox
 	PROPERTIES
 	DEBUG_POSTFIX "d${DEBUG_POSTFIX}")	
-	
-install(TARGETS skybox
-    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    CONFIGURATIONS Debug Release)
 
-install(FILES 
-    "${QT_BINARY_DIR}/QtCored${QT_VERSION_MAJOR}.dll"
-    "${QT_BINARY_DIR}/QtGuid${QT_VERSION_MAJOR}.dll"
-    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    CONFIGURATIONS Debug)
+if(MSVC)
+    install(TARGETS skybox
+        DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        CONFIGURATIONS Debug Release)
 
-install(FILES 
-    "${QT_BINARY_DIR}/QtCore${QT_VERSION_MAJOR}.dll"
-    "${QT_BINARY_DIR}/QtGui${QT_VERSION_MAJOR}.dll"
-    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    CONFIGURATIONS Release)
+    install(FILES 
+        "${QT_BINARY_DIR}/QtCored${QT_VERSION_MAJOR}.dll"
+        "${QT_BINARY_DIR}/QtGuid${QT_VERSION_MAJOR}.dll"
+        DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        CONFIGURATIONS Debug)
+
+    install(FILES 
+        "${QT_BINARY_DIR}/QtCore${QT_VERSION_MAJOR}.dll"
+        "${QT_BINARY_DIR}/QtGui${QT_VERSION_MAJOR}.dll"
+        DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        CONFIGURATIONS Release)
+endif()
 
 add_definitions("-DOSGHIMMEL_EXPOSE_SHADERS")
 

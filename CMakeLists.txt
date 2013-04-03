@@ -79,6 +79,17 @@ option(OPTION_MAKE_DEMOS "Make Demos" ON)
 option(OPTION_MAKE_SKYBOX "Make SkyBox - Sandbox for osgHimmel (requires Qt)" ON)
 option(OPTION_MAKE_TESTS "Make Tests" ON)
 
+# copied from osg's CMakeLists.txt
+IF(UNIX AND NOT WIN32 AND NOT APPLE)
+  IF(CMAKE_SIZEOF_VOID_P MATCHES "8")
+      SET(LIB_POSTFIX "64" CACHE STRING "suffix for 32/64 dir placement")
+      MARK_AS_ADVANCED(LIB_POSTFIX)
+  ENDIF()
+ENDIF()
+IF(NOT DEFINED LIB_POSTFIX)
+    SET(LIB_POSTFIX "")
+ENDIF()
+
 
 # 3rdp and resources
 
@@ -98,16 +109,17 @@ set(OSG_SOVERSION "80" CACHE STRING "OSG binaries version (osg##.dll).")
 
 # lib/bin copy
 
-set(OSG_PLUGIN_DIR "${OSG_BINARY_DIR}/osgPlugins-${OPENSCENEGRAPH_VERSION}")
+if(MSVC)
+    set(OSG_PLUGIN_DIR "${OSG_BINARY_DIR}/osgPlugins-${OPENSCENEGRAPH_VERSION}")
 
-if(NOT EXISTS ${OSG_PLUGIN_DIR}/)
-    message(WARNING "osgPlugins dir not found, please specify OSG_PLUGIN_DIR.")
+    if(NOT EXISTS ${OSG_PLUGIN_DIR}/)
+        message(WARNING "osgPlugins dir not found, please specify OSG_PLUGIN_DIR.")
+    endif()
+
+    if(NOT EXISTS ${OSG_BINARY_DIR}/osg${OSG_SOVERSION}-osgd.dll)
+        message(WARNING "OSG_SOVERSION (${OSG_SOVERSION}) seems wrong. ${OSG_BINARY_DIR}/osg${OSG_SOVERSION}-osgd.dll not found.")
+    endif()
 endif()
-
-if(NOT EXISTS ${OSG_BINARY_DIR}/osg${OSG_SOVERSION}-osgd.dll)
-    message(WARNING "OSG_SOVERSION (${OSG_SOVERSION}) seems wrong. ${OSG_BINARY_DIR}/osg${OSG_SOVERSION}-osgd.dll not found.")
-endif()
-
 
 # sources
 
