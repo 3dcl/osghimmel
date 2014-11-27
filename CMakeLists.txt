@@ -62,7 +62,7 @@ project(${PROJECT_NAME} C CXX)
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "limited configs" FORCE)
 
-set(VERSION_MAJOR "0" CACHE STRING "${PROJECT_NAME} Major Version")
+set(VERSION_MAJOR "1" CACHE STRING "${PROJECT_NAME} Major Version")
 set(VERSION_MINOR "0" CACHE STRING "${PROJECT_NAME} Minor Version")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
@@ -146,7 +146,7 @@ endif()
 option(BUILD_DEBIAN_PACKAGE  "Creates a debian package" ON)
 if(BUILD_DEBIAN_PACKAGE) 
     # set project description for packaging
-    set(META_PROJECT_NAME        "osghimmel")
+    set(META_PROJECT_NAME        "libosghimmel")
     set(META_PROJECT_DESCRIPTION "osgHimmel is a OpenSceneGraph (OSG) extending lib that allows visualization of background imagery in arbitrary scenegraphs.")
     set(META_VERSION_MAJOR       ${VERSION_MAJOR})
     set(META_VERSION_MINOR       ${VERSION_MINOR})
