@@ -62,7 +62,7 @@ project(${PROJECT_NAME} C CXX)
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "limited configs" FORCE)
 
-set(VERSION_MAJOR "0" CACHE STRING "${PROJECT_NAME} Major Version")
+set(VERSION_MAJOR "1" CACHE STRING "${PROJECT_NAME} Major Version")
 set(VERSION_MINOR "0" CACHE STRING "${PROJECT_NAME} Minor Version")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
@@ -143,16 +143,56 @@ endif()
 
 
 # cpack deploy
+option(BUILD_DEBIAN_PACKAGE  "Creates a debian package" ON)
+if(BUILD_DEBIAN_PACKAGE) 
+    # set project description for packaging
+    set(META_PROJECT_NAME        "libosghimmel")
+    set(META_PROJECT_DESCRIPTION "osgHimmel is a OpenSceneGraph (OSG) extending lib that allows visualization of background imagery in arbitrary scenegraphs.")
+    set(META_VERSION_MAJOR       ${VERSION_MAJOR})
+    set(META_VERSION_MINOR       ${VERSION_MINOR})
+    set(META_VERSION_PATCH       "0")
+    set(META_VERSION             "${META_VERSION_MAJOR}.${META_VERSION_MINOR}.${META_VERSION_PATCH}")
+    set(META_AUTHOR_ORGANIZATION "3D Content Logistics")
+    set(META_AUTHOR_DOMAIN       "https://github.com/3dcl/osghimmel.git")
+    set(META_AUTHOR_MAINTAINER   "Marcel Pursche <marcel.pursche@3dcontentlogistics.com>")
 
-set(CPACK_GENERATOR "ZIP")
-set(CPACK_SOURCE_GENERATOR "ZIP")
+    # Package information
+    string(TOLOWER ${META_PROJECT_NAME}     package_name)          # Package name
+    set(CPACK_PACKAGE_NAME                  "${META_PROJECT_NAME}")
+    set(CPACK_PACKAGE_VENDOR                "${META_AUTHOR_ORGANIZATION}")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY   "${META_PROJECT_DESCRIPTION}")
+    set(CPACK_PACKAGE_VERSION               "${META_VERSION}")
+    set(CPACK_PACKAGE_VERSION_MAJOR         "${META_VERSION_MAJOR}")
+    set(CPACK_PACKAGE_VERSION_MINOR         "${META_VERSION_MINOR}")
+    set(CPACK_PACKAGE_VERSION_PATCH         "${META_VERSION_PATCH}")
+    set(CPACK_PACKAGE_RELOCATABLE           OFF)
 
-set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH 0)
+    # Debian package information
+    set(CPACK_DEBIAN_PACKAGE_NAME           "${package_name}")
+    set(CPACK_DEBIAN_PACKAGE_VERSION        "${CPACK_PACKAGE_VERSION}")
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER     "${META_AUTHOR_MAINTAINER}")
+    set(CPACK_DEBIAN_PACKAGE_DESCRIPTION    "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
+    set(CPACK_DEBIAN_PACKAGE_SECTION        "Development")
+    set(CPACK_DEBIAN_PACKAGE_PRIORITY       "optional")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS        "libc6 (>= 2.4), libgcc1 (>= 1:4.1), libstdc++6 (>= 4.6), openscenegraph-all (>= 3.3.0), libgl1-mesa-glx | libgl1")
+    set(CPACK_DEBIAN_PACKAGE_CONFLICTS      "")
+    set(CPACK_DEBIAN_PACKAGE_HOMEPAGE       "${META_AUTHOR_DOMAIN}")
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA  "")
+        
+    set(CPACK_GENERATOR "DEB")
 
-set(CPACK_INSTALL_DIRECTORIES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-set(CPACK_IGNORE_FILES "/.pdb/;/.ilk/;/\\.svn/;/\\.hg/;/\\.git/;\\.swp$;\\.#;/#")
-set(CPACK_OUTPUT_FILE_PREFIX ${CMAKE_SOURCE_DIR})
+    include(CPack)
+else()    
+    set(CPACK_GENERATOR "ZIP")
+    set(CPACK_SOURCE_GENERATOR "ZIP")
 
-include(CPack)
+    set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
+    set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
+    set(CPACK_PACKAGE_VERSION_PATCH 0)
+
+    set(CPACK_INSTALL_DIRECTORIES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    set(CPACK_IGNORE_FILES "/.pdb/;/.ilk/;/\\.svn/;/\\.hg/;/\\.git/;\\.swp$;\\.#;/#")
+    set(CPACK_OUTPUT_FILE_PREFIX ${CMAKE_SOURCE_DIR})
+
+    include(CPack)
+endif()
