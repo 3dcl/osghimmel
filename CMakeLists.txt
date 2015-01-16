@@ -177,7 +177,7 @@ if(BUILD_DEBIAN_PACKAGE)
     set(CPACK_DEBIAN_PACKAGE_DEPENDS        "libc6 (>= 2.4), libgcc1 (>= 1:4.1), libstdc++6 (>= 4.6), openscenegraph-all (>= 3.3.0), libgl1-mesa-glx | libgl1")
     set(CPACK_DEBIAN_PACKAGE_CONFLICTS      "")
     set(CPACK_DEBIAN_PACKAGE_HOMEPAGE       "${META_AUTHOR_DOMAIN}")
-    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA  "")
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA  "${CMAKE_CURRENT_SOURCE_DIR}/debian_scripts/postinst;")
         
     set(CPACK_GENERATOR "DEB")
 
